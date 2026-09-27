@@ -3,16 +3,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogoImg from "../assets/logo.png";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const [planCount, setPlanCount] = useState(0);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const updateCounts = () => {
+      const plan = Number(localStorage.getItem("planCount")) || 0;
+      const saved = Number(localStorage.getItem("savedCount")) || 0;
+
+      setPlanCount(plan);
+      setSavedCount(saved);
+    };
+
+    updateCounts();
+
+    window.addEventListener("storage", updateCounts);
+    window.addEventListener("planUpdated", updateCounts);
+    window.addEventListener("savedUpdated", updateCounts);
+
+    return () => {
+      window.removeEventListener("storage", updateCounts);
+      window.removeEventListener("planUpdated", updateCounts);
+      window.removeEventListener("savedUpdated", updateCounts);
+    };
+  }, []);
+
   const navLinkClass = (href: string) =>
     `font-bold transition-colors duration-200 ${
-      pathname === href ? "text-[#C2F800]" : "text-gray-300 "
+      pathname === href ? "text-[#C2F800]" : "text-gray-300"
     }`;
 
   return (
@@ -22,7 +47,7 @@ export default function Navbar() {
         <div className="navbar-start">
           <Link
             href="/"
-            className="flex items-center gap-2 sm:gap-3 "
+            className="flex items-center gap-2 sm:gap-3"
             onClick={() => setIsMenuOpen(false)}
           >
             <Image
@@ -61,8 +86,9 @@ export default function Navbar() {
               className="flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-gray-300 transition-all duration-300 hover:bg-gray-800 hover:text-white"
             >
               Plan
+
               <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#C2F800] px-1.5 text-sm font-bold text-black">
-                0
+                {planCount}
               </span>
             </Link>
 
@@ -71,8 +97,9 @@ export default function Navbar() {
               className="flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-gray-300 transition-all duration-300 hover:bg-gray-800 hover:text-white"
             >
               Saved
+
               <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#C2F800] px-1.5 text-sm font-bold text-black">
-                0
+                {savedCount}
               </span>
             </Link>
           </div>
@@ -151,8 +178,9 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-3 py-3 font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white"
               >
                 Plan
+
                 <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#C2F800] px-1.5 text-sm font-bold text-black">
-                  0
+                  {planCount}
                 </span>
               </Link>
 
@@ -162,8 +190,9 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-3 py-3 font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white"
               >
                 Saved
+
                 <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#C2F800] px-1.5 text-sm font-bold text-black">
-                  0
+                  {savedCount}
                 </span>
               </Link>
             </div>
