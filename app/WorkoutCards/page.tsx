@@ -1,5 +1,5 @@
 import { WorkoutsType } from "../Type/type";
-import WorkoutCard from "./WorkoutCard/page";
+import WorkoutCard from "./WorkoutCard";
 
 export default async function WorkoutCards() {
   const res = await fetch("https://api.abcz.workers.dev/api/fitlog");
