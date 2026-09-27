@@ -2,7 +2,11 @@ import { WorkoutsType } from "@/app/Type/type";
 import { Clock, Flame, Star } from "lucide-react";
 import Image from "next/image";
 
-export default function WorkoutCard({ workout }: WorkoutsType) {
+interface WorkoutCardProps {
+  workout: WorkoutsType;
+}
+
+export default function WorkoutCard({ workout }: WorkoutCardProps) {
   const {
     image,
     muscleGroups,
